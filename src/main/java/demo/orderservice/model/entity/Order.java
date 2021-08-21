@@ -1,18 +1,15 @@
 package demo.orderservice.model.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.Accessors;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @EntityListeners(AuditingEntityListener.class)
 @Entity
@@ -21,6 +18,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 @Accessors(chain = true)
+@ToString(exclude = "orderDetailList")
 public class Order {
 
     @Id
@@ -47,5 +45,8 @@ public class Order {
 
     private Long consumerId;
 
+    // Order 1 : N OrderDetail
+    @OneToMany
+    private List<OrderDetail> orderDetailList;
 
 }
