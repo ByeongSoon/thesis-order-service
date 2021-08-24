@@ -13,6 +13,7 @@ import java.util.List;
 
 @EntityListeners(AuditingEntityListener.class)
 @Entity
+@Table(name = "item")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -42,7 +43,7 @@ public class Item {
     private LocalDateTime updatedAt;
 
     // item 1 : N OrderDetail
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "item")
     private List<OrderDetail> orderDetailList;
 
 }

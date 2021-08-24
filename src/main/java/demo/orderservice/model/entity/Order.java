@@ -46,7 +46,7 @@ public class Order {
     private Long consumerId;
 
     // Order 1 : N OrderDetail
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "order")
     private List<OrderDetail> orderDetailList;
 
 }
