@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @EntityListeners(AuditingEntityListener.class)
-@Entity
+@Entity(name = "order_info")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

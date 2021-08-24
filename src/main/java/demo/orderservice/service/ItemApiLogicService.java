@@ -56,7 +56,7 @@ public class ItemApiLogicService implements CrudInterface<ItemApiResponse, ItemA
                         .setPrice(itemApiRequest.getPrice())
                         .setBrandName(itemApiRequest.getBrandName())
                 )
-                .map(item -> itemRepository.save(item))
+                .map(newItem -> itemRepository.save(newItem))
                 .map(this::response)
                 .map(Header::OK)
                 .orElseGet(() -> Header.ERROR("업데이트 실패"));
