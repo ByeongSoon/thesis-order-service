@@ -1,4 +1,4 @@
-package demo.orderservice.model.network.response;
+package demo.orderservice.model.network.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,13 +6,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class OrderApiResponse {
+public class OrderInfoApiRequest {
 
     private Long id;
 
@@ -23,12 +22,6 @@ public class OrderApiResponse {
     private BigDecimal totalPrice;
 
     private Integer totalQuantity;
-
-    private LocalDateTime orderAt;
-
-    private LocalDateTime createdAt;
-
-    private LocalDateTime updatedAt;
 
     private Long deliveryId;
 

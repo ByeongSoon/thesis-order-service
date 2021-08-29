@@ -12,14 +12,14 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @EntityListeners(AuditingEntityListener.class)
-@Entity(name = "order_info")
+@Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Accessors(chain = true)
 @ToString(exclude = "orderDetailList")
-public class Order {
+public class OrderInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -46,7 +46,7 @@ public class Order {
     private Long consumerId;
 
     // Order 1 : N OrderDetail
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "order")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "orderInfo")
     private List<OrderDetail> orderDetailList;
 
 }

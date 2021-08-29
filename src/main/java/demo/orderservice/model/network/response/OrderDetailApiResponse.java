@@ -24,7 +24,7 @@ public class OrderDetailApiResponse {
 
     private LocalDateTime updatedAt;
 
-    private Long orderId;
+    private Long orderInfoId;
 
     private Long itemId;
 

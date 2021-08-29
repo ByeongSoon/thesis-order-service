@@ -1,10 +1,10 @@
 package demo.orderservice.service;
 
-import demo.orderservice.model.entity.Order;
+import demo.orderservice.model.entity.OrderInfo;
 import demo.orderservice.model.network.Header;
 import demo.orderservice.model.network.Pagination;
-import demo.orderservice.model.network.request.OrderApiRequest;
-import demo.orderservice.model.network.response.OrderApiResponse;
+import demo.orderservice.model.network.request.OrderInfoApiRequest;
+import demo.orderservice.model.network.response.OrderInfoApiResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -14,13 +14,13 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class OrderApiLogicService extends BaseService<OrderApiResponse, OrderApiRequest, Order>{
+public class OrderApiLogicService extends BaseService<OrderInfoApiResponse, OrderInfoApiRequest, OrderInfo>{
 
     @Override
-    public Header<OrderApiResponse> create(Header<OrderApiRequest> request) {
-        OrderApiRequest orderApiRequest = request.getData();
+    public Header<OrderInfoApiResponse> create(Header<OrderInfoApiRequest> request) {
+        OrderInfoApiRequest orderApiRequest = request.getData();
 
-        Order order = Order.builder()
+        OrderInfo order = OrderInfo.builder()
                 .status(orderApiRequest.getStatus())
                 .paymentType(orderApiRequest.getPaymentType())
                 .totalPrice(orderApiRequest.getTotalPrice())
@@ -34,7 +34,7 @@ public class OrderApiLogicService extends BaseService<OrderApiResponse, OrderApi
     }
 
     @Override
-    public Header<OrderApiResponse> read(Long id) {
+    public Header<OrderInfoApiResponse> read(Long id) {
         return baseRepository.findById(id)
                 .map(this::response)
                 .map(Header::OK)
@@ -42,8 +42,8 @@ public class OrderApiLogicService extends BaseService<OrderApiResponse, OrderApi
     }
 
     @Override
-    public Header<OrderApiResponse> update(Header<OrderApiRequest> request) {
-        OrderApiRequest orderApiRequest = request.getData();
+    public Header<OrderInfoApiResponse> update(Header<OrderInfoApiRequest> request) {
+        OrderInfoApiRequest orderApiRequest = request.getData();
 
         return baseRepository.findById(orderApiRequest.getId())
                 .map(order -> order
@@ -71,10 +71,10 @@ public class OrderApiLogicService extends BaseService<OrderApiResponse, OrderApi
     }
 
     @Override
-    public Header<List<OrderApiResponse>> search(Pageable pageable) {
-        Page<Order> orders = baseRepository.findAll(pageable);
+    public Header<List<OrderInfoApiResponse>> search(Pageable pageable) {
+        Page<OrderInfo> orders = baseRepository.findAll(pageable);
 
-        List<OrderApiResponse> orderApiResponseList = orders.stream()
+        List<OrderInfoApiResponse> orderApiResponseList = orders.stream()
                 .map(this::response)
                 .collect(Collectors.toList());
 
@@ -88,8 +88,8 @@ public class OrderApiLogicService extends BaseService<OrderApiResponse, OrderApi
         return Header.OK(orderApiResponseList,pagination);
     }
 
-    public OrderApiResponse response(Order order) {
-        return OrderApiResponse.builder()
+    public OrderInfoApiResponse response(OrderInfo order) {
+        return OrderInfoApiResponse.builder()
                 .id(order.getId())
                 .status(order.getStatus())
                 .paymentType(order.getPaymentType())

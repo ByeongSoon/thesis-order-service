@@ -19,7 +19,7 @@ public class OrderDetailApiRequest {
 
     private BigDecimal totalPrice;
 
-    private Long orderId;
+    private Long orderInfoId;
 
     private Long itemId;
 

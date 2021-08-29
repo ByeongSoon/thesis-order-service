@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 @Accessors(chain = true)
-@ToString(exclude = {"order","item"})
+@ToString(exclude = {"orderInfo","item"})
 public class OrderDetail {
 
     @Id
@@ -36,7 +36,7 @@ public class OrderDetail {
 
     // OrderDetail N : 1 Order
     @ManyToOne
-    private Order order;
+    private OrderInfo orderInfo;
 
     // OrderDetail N : 1 Item
     @ManyToOne
