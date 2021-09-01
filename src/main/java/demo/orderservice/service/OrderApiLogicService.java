@@ -3,11 +3,14 @@ package demo.orderservice.service;
 import demo.orderservice.model.entity.OrderInfo;
 import demo.orderservice.model.network.Header;
 import demo.orderservice.model.network.Pagination;
+import demo.orderservice.model.network.request.DeliveryApiRequest;
 import demo.orderservice.model.network.request.OrderInfoApiRequest;
 import demo.orderservice.model.network.response.OrderInfoApiResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,6 +18,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class OrderApiLogicService extends BaseService<OrderInfoApiResponse, OrderInfoApiRequest, OrderInfo>{
+
+    @Autowired
+    private RestTemplate restTemplate;
 
     @Override
     public Header<OrderInfoApiResponse> create(Header<OrderInfoApiRequest> request) {
@@ -87,6 +93,24 @@ public class OrderApiLogicService extends BaseService<OrderInfoApiResponse, Orde
 
         return Header.OK(orderApiResponseList,pagination);
     }
+
+    // RestTemplate 이용하여 Delivery Service 에 POST 요청 후 Delivery Id를 받아옴
+    public Header<OrderInfoApiResponse> orderByConsumer(Header<OrderInfoApiRequest> request) {
+        OrderInfoApiRequest body = request.getData();
+
+        String deliveryUrl = "http://localhost:8000/api/delivery/byOrder";
+        DeliveryApiRequest deliveryApiRequest = DeliveryApiRequest.builder()
+                .status(body.getDeliveryStatus())
+                .revName(body.getRevName())
+                .revAddress(body.getRevAddress())
+                .build();
+
+        Long deliveryID = restTemplate.postForObject(deliveryUrl,deliveryApiRequest,Long.class);
+        request.getData().setDeliveryId(deliveryID);
+
+        return create(request);
+    }
+
 
     public OrderInfoApiResponse response(OrderInfo order) {
         return OrderInfoApiResponse.builder()

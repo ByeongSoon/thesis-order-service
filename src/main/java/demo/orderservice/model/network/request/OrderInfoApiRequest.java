@@ -25,6 +25,13 @@ public class OrderInfoApiRequest {
 
     private Long deliveryId;
 
+    // Order By Consumer Logic에 사용
+    private String revName;
+
+    private String revAddress;
+
+    private String deliveryStatus;
+
     private Long consumerId;
 
 }
