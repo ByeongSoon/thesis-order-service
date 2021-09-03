@@ -6,6 +6,7 @@ import demo.orderservice.model.network.Pagination;
 import demo.orderservice.model.network.request.DeliveryApiRequest;
 import demo.orderservice.model.network.request.OrderInfoApiRequest;
 import demo.orderservice.model.network.response.OrderInfoApiResponse;
+import demo.orderservice.repository.OrderInfoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +22,9 @@ public class OrderApiLogicService extends BaseService<OrderInfoApiResponse, Orde
 
     @Autowired
     private RestTemplate restTemplate;
+
+    @Autowired
+    private OrderInfoRepository orderInfoRepository;
 
     @Override
     public Header<OrderInfoApiResponse> create(Header<OrderInfoApiRequest> request) {
@@ -92,6 +96,14 @@ public class OrderApiLogicService extends BaseService<OrderInfoApiResponse, Orde
                 .build();
 
         return Header.OK(orderApiResponseList,pagination);
+    }
+
+    public Header<List<OrderInfoApiResponse>> getByConsumerId(Long id) {
+        List<OrderInfoApiResponse> orderInfos = orderInfoRepository.findByConsumerId(id).stream()
+                .map(this::response)
+                .collect(Collectors.toList());
+
+        return Header.OK(orderInfos);
     }
 
     // RestTemplate 이용하여 Delivery Service 에 POST 요청 후 Delivery Id를 받아옴
