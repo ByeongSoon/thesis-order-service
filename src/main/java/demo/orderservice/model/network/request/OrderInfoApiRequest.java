@@ -34,4 +34,6 @@ public class OrderInfoApiRequest {
 
     private Long consumerId;
 
+    private OrderDetailApiRequest orderDetail;
+
 }

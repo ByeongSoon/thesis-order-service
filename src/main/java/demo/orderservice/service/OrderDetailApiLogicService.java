@@ -38,6 +38,17 @@ public class OrderDetailApiLogicService extends BaseService<OrderDetailApiRespon
         return Header.OK(response(baseRepository.save(orderDetail)));
     }
 
+    public void orderByConsumer(OrderDetailApiRequest request) {
+        OrderDetail orderDetail = OrderDetail.builder()
+            .quantity(request.getQuantity())
+            .totalPrice(request .getTotalPrice())
+            .orderInfo(orderInfoRepository.getById(request.getOrderInfoId()))
+            .item(itemRepository.getById(request.getItemId()))
+            .build();
+
+        baseRepository.save(orderDetail);
+    }
+
     @Override
     public Header<OrderDetailApiResponse> read(Long id) {
         return baseRepository.findById(id)

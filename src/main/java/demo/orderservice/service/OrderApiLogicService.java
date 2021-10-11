@@ -4,6 +4,7 @@ import demo.orderservice.model.entity.OrderInfo;
 import demo.orderservice.model.network.Header;
 import demo.orderservice.model.network.Pagination;
 import demo.orderservice.model.network.request.DeliveryApiRequest;
+import demo.orderservice.model.network.request.OrderDetailApiRequest;
 import demo.orderservice.model.network.request.OrderInfoApiRequest;
 import demo.orderservice.model.network.response.OrderInfoApiResponse;
 import demo.orderservice.repository.OrderInfoRepository;
@@ -26,9 +27,13 @@ public class OrderApiLogicService extends BaseService<OrderInfoApiResponse, Orde
     @Autowired
     private OrderInfoRepository orderInfoRepository;
 
+    @Autowired
+    private OrderDetailApiLogicService orderDetailApiLogicService;
+
     @Override
     public Header<OrderInfoApiResponse> create(Header<OrderInfoApiRequest> request) {
         OrderInfoApiRequest orderApiRequest = request.getData();
+        OrderDetailApiRequest orderDetailApiRequest = orderApiRequest.getOrderDetail();
 
         OrderInfo order = OrderInfo.builder()
                 .status(orderApiRequest.getStatus())
@@ -40,7 +45,12 @@ public class OrderApiLogicService extends BaseService<OrderInfoApiResponse, Orde
                 .consumerId(orderApiRequest.getConsumerId())
                 .build();
 
-        return Header.OK(response(baseRepository.save(order)));
+        OrderInfo orderInfo = baseRepository.save(order);
+
+        orderDetailApiRequest.setOrderInfoId(orderInfo.getId());
+        orderDetailApiLogicService.orderByConsumer(orderDetailApiRequest);
+
+        return Header.OK(response(orderInfo));
     }
 
     @Override
