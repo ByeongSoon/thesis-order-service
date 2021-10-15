@@ -47,8 +47,10 @@ public class OrderApiLogicService extends BaseService<OrderInfoApiResponse, Orde
 
         OrderInfo orderInfo = baseRepository.save(order);
 
-        orderDetailApiRequest.setOrderInfoId(orderInfo.getId());
-        orderDetailApiLogicService.orderByConsumer(orderDetailApiRequest);
+        if (orderDetailApiRequest != null) {
+            orderDetailApiRequest.setOrderInfoId(orderInfo.getId());
+            orderDetailApiLogicService.orderByConsumer(orderDetailApiRequest);
+        }
 
         return Header.OK(response(orderInfo));
     }
