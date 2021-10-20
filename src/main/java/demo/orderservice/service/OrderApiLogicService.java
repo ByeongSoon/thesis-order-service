@@ -132,12 +132,13 @@ public class OrderApiLogicService extends BaseService<OrderInfoApiResponse, Orde
                 .revAddress(body.getRevAddress())
                 .build();
 
-        request.getData()
+        request
+            .getData()
             .setDeliveryId(requester
-                .route("delivery-id")
-                .data(deliveryApiRequest)
-                .retrieveMono(Long.class)
-                .block()
+                    .route("delivery-id")
+                    .data(deliveryApiRequest)
+                    .retrieveMono(Long.class)
+                    .block()
             );
 
         return create(request);
