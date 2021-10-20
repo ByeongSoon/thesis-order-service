@@ -8,27 +8,31 @@ import demo.orderservice.model.network.request.OrderDetailApiRequest;
 import demo.orderservice.model.network.request.OrderInfoApiRequest;
 import demo.orderservice.model.network.response.OrderInfoApiResponse;
 import demo.orderservice.repository.OrderInfoRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.messaging.rsocket.RSocketRequester;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+import reactor.core.publisher.Mono;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class OrderApiLogicService extends BaseService<OrderInfoApiResponse, OrderInfoApiRequest, OrderInfo>{
-
-    @Autowired
-    private RestTemplate restTemplate;
 
     @Autowired
     private OrderInfoRepository orderInfoRepository;
 
     @Autowired
     private OrderDetailApiLogicService orderDetailApiLogicService;
+
+    @Autowired
+    private final RSocketRequester requester;
 
     @Override
     public Header<OrderInfoApiResponse> create(Header<OrderInfoApiRequest> request) {
@@ -122,17 +126,19 @@ public class OrderApiLogicService extends BaseService<OrderInfoApiResponse, Orde
     public Header<OrderInfoApiResponse> orderByConsumer(Header<OrderInfoApiRequest> request) {
         OrderInfoApiRequest body = request.getData();
 
-        String deliveryUrl = "http://localhost:8000/api/delivery/byOrder";
         DeliveryApiRequest deliveryApiRequest = DeliveryApiRequest.builder()
                 .status(body.getDeliveryStatus())
                 .revName(body.getRevName())
                 .revAddress(body.getRevAddress())
                 .build();
 
-        // RSocket Branch Test
-
-        Long deliveryID = restTemplate.postForObject(deliveryUrl,deliveryApiRequest,Long.class);
-        request.getData().setDeliveryId(deliveryID);
+        request.getData()
+            .setDeliveryId(requester
+                .route("delivery-id")
+                .data(deliveryApiRequest)
+                .retrieveMono(Long.class)
+                .block()
+            );
 
         return create(request);
     }
