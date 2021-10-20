@@ -129,6 +129,8 @@ public class OrderApiLogicService extends BaseService<OrderInfoApiResponse, Orde
                 .revAddress(body.getRevAddress())
                 .build();
 
+        // RSocket Branch Test
+
         Long deliveryID = restTemplate.postForObject(deliveryUrl,deliveryApiRequest,Long.class);
         request.getData().setDeliveryId(deliveryID);
 
