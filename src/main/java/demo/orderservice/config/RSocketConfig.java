@@ -1,10 +1,7 @@
 package demo.orderservice.config;
 
-import io.rsocket.RSocket;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.codec.cbor.Jackson2CborDecoder;
-import org.springframework.http.codec.cbor.Jackson2CborEncoder;
 import org.springframework.http.codec.json.Jackson2JsonDecoder;
 import org.springframework.http.codec.json.Jackson2JsonEncoder;
 import org.springframework.messaging.rsocket.RSocketRequester;
@@ -22,16 +19,14 @@ public class RSocketConfig {
         .decoders(decoders -> decoders.add(new Jackson2JsonDecoder()))
         .build();
 
-    return  RSocketRequester.builder()
+    return RSocketRequester.builder()
         .rsocketStrategies(strategies)
         .rsocketConnector(connector -> connector.keepAlive(Duration.ofSeconds(100),Duration.ofSeconds(5000)))
-        .tcp("localhost",7000);
-//        .connectTcp("localhost",7000)
-//        .retry()
-//        .block();
-//        .retry()
-//        .cache()
-//        .block(Duration.ofSeconds(5));
+//        .tcp("localhost",7000);
+        .connectTcp("localhost",7000)
+        .retry()
+        .cache()
+        .block();
   }
 
 }
